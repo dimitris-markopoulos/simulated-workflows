@@ -38,8 +38,9 @@ def fit_score_kmeans(
     """
     Returns adjusted randscore.
     """
-
-    model = KMeans(n_clusters = K)
+    
+    # same KMeans initialization for the paired runs so differences are due to PCA, not luck in centroid init
+    model = KMeans(n_clusters=K, n_init=50, random_state=0) 
     fit   = model.fit(X)
 
     y_pred = fit.predict(X)
@@ -100,6 +101,12 @@ def iterative_fit_score_kmeans(
 
     return (score_dict, cv_dict)
 
+def summarize(cv_dict):
+    ns = sorted(cv_dict.keys())
+    means = [np.mean(cv_dict[n]) for n in ns]
+    stds  = [np.std(cv_dict[n], ddof=1) for n in ns]  # std, not SE
+    return ns, means, stds
+
 #======= 4. VIZ =======
 
 def viz_rand_score_over_folds(
@@ -157,7 +164,7 @@ def viz_rand_score_over_folds(
         figure.suptitle(label, fontsize=16, fontweight="bold", y=1.0)
 
     figure.supxlabel("iterations", fontsize=14, fontweight="bold")
-    figure.supylabel("rand_score", fontsize=14, fontweight="bold")
+    figure.supylabel("adjusted_rand_score", fontsize=14, fontweight="bold")
     figure.tight_layout()
     figure.subplots_adjust(left=0.05)
 
@@ -207,7 +214,7 @@ def viz_rand_score_over_folds_superimposed(
         ax.legend(fontsize=9, loc="lower right", frameon=False)
         ax.set_title(f"N = {n_val}", fontsize=12)
     fig.supxlabel("iterations", fontsize=14, fontweight="bold")
-    fig.supylabel("rand_score", fontsize=14, fontweight="bold")
+    fig.supylabel("adjusted_rand_score", fontsize=14, fontweight="bold")
     fig.suptitle("Clustering Performance: ~PCA vs PCA", fontsize=16, fontweight="bold")
     fig.tight_layout()
     fig.subplots_adjust(bottom=0.15, left=0.05)
