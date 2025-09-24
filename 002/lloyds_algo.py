@@ -154,12 +154,12 @@ def viz_rand_score_over_folds(
         )
 
     if label:
-        figure.suptitle(label, fontsize=16, fontweight="bold", y=1.02)
+        figure.suptitle(label, fontsize=16, fontweight="bold", y=1.0)
 
     figure.supxlabel("iterations", fontsize=14, fontweight="bold")
     figure.supylabel("rand_score", fontsize=14, fontweight="bold")
     figure.tight_layout()
-    figure.subplots_adjust(bottom=0.15, left=0.05)
+    figure.subplots_adjust(left=0.05)
 
     return figure, axes
 
